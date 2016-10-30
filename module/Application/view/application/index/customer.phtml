@@ -1,3 +1,11 @@
+<select id="select-customer">
+	<option>--- Select Sample Record ---</option>
+	<?php foreach ($this->customers as $customer): ?>
+	<option value="<?= $customer->getId() ?>" <?= $this->id == $customer->getId() ? 'selected="selected"': '' ?>>
+		<?= sprintf('%s %s', $customer->getFirstName(), $customer->getLastName()) ?>
+	</option>
+	<?php endforeach; ?>
+</select>
 <?php
     $fields = [ 'firstname',
         'lastname',
@@ -27,8 +35,10 @@
         	</tbody>
         </table>
         <hr>
-        <button type="button" id="btn-modal_customer-with-formviewhelpers" class="btn btn-primary btn-sm">Modal with Form View Helpers</button>
-        <button type="button" id="btn-modal_customer-without-formviewhelpers" class="btn btn-primary btn-sm">Modal without Form View Helpers</button>
+        <?php if ($this->id): ?>
+            <button type="button" id="btn-modal_customer-with-formviewhelpers" class="btn btn-primary btn-sm">Modal with Form View Helpers</button>
+            <button type="button" id="btn-modal_customer-without-formviewhelpers" class="btn btn-primary btn-sm">Modal without Form View Helpers</button>
+    	<?php endif; ?>
     </div>
 </div>
 <?= $this->form()->closeTag(); ?>
@@ -52,6 +62,12 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+
+	$('#select-customer').change(function() {
+		location.href = '<?= $this->url('application', ['action' => 'customer']) ?>' + $(this).val() + '/';
+	});
+
+	
 	$('#btn-modal_customer-with-formviewhelpers').click(function() {
 		displayModal(1);
 	});

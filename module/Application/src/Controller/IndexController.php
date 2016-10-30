@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 
 use Application\Model\Customer\CustomerMapper;
 use Application\Form\CustomerForm;
+use Application\Model\Customer\CustomerEntity;
 
 class IndexController extends AbstractActionController
 {
@@ -37,16 +38,25 @@ class IndexController extends AbstractActionController
     
     public function customerAction() 
     {
-        $id = (int) $this->params()->fromRoute('id', 1);    
-        
-        // Existing Customer record
+        $id = (int) $this->params()->fromRoute('id', 0);    
+
         $customer = $this->customerMapper->fetch($id);
+        
+        if (!$customer) {
+            $customer = new CustomerEntity();
+            $id = 0;
+        }
+        
         $form = new CustomerForm();
         $form->bind($customer);
+        
+        // All Customers for select drop down
+        $customers = $this->customerMapper->fetchAll();
         
         return new ViewModel([
             'id'    => $id,
             'form'  => $form,
+            'customers' => $customers,
         ]);
         
     }

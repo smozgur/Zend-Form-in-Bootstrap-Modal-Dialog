@@ -43,16 +43,24 @@ class AjaxController extends AbstractActionController
     {
         $result = new JsonModel();
 
-        /*
+        $result->setVariables([
+            'success'   => false,
+            'title'     => 'Edit Customer',
+            'body'      => 'Customer Not Found',
+        ]);
+        
         if (!$this->getRequest()->isXmlHttpRequest()) {
             return $result;
         }
-        */
         
         $id = (int) $this->getRequest()->getPost('id', false);
         $formHelpers = (bool) $this->getRequest()->getPost('formhelpers', false);
         
         $customer = $this->customerMapper->fetch($id);
+        
+        if (!$customer) {
+            return $result;
+        }
         
         $form = new CustomerForm();
         $form->bind($customer);

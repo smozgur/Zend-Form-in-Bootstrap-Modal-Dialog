@@ -43,6 +43,10 @@ class CustomerMapper
         }
     }
     
+    public function fetchAll() {
+        return $this->data;
+    }
+    
     public function fetch($id) 
     {
         
