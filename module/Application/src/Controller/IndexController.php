@@ -37,18 +37,12 @@ class IndexController extends AbstractActionController
     
     public function customerAction() 
     {
-        $id = (int) $this->params()->fromRoute('id', false);    
+        $id = (int) $this->params()->fromRoute('id', 1);    
         
-        if ($id === false) {
-            // Customer Indes or some error
-        } elseif ($id === 0) {
-            // New Customer record
-        } else {
-            // Existing Customer record
-            $customer = $this->customerMapper->fetch($id);
-            $form = new CustomerForm();
-            $form->bind($customer);
-        }
+        // Existing Customer record
+        $customer = $this->customerMapper->fetch($id);
+        $form = new CustomerForm();
+        $form->bind($customer);
         
         return new ViewModel([
             'id'    => $id,
