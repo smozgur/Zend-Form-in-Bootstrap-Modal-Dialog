@@ -1,0 +1,88 @@
+<?php
+    $fields = [ 'firstname',
+        'lastname',
+        'email',
+    ];
+
+	$this->form->setAttribute('action', $this->url('application', ['action' => 'edit-customer', 'id' => $this->id]));
+	$this->form->prepare();
+?>
+
+<?= $this->form()->openTag($this->form) ?>
+<?= $this->formhidden($this->form->get('id')) ?>
+<div class="row">
+    <div class="col-xs-6">
+        <table class="table table-condensed">
+            <colgroup>
+                <col class="col-xs-5">
+                <col class="col-xs-7">
+            </colgroup>
+            <tbody>
+            <?php foreach ($fields as $field): $element = $this->form->get($field); ?>
+                <tr>
+                	<th><?= $this->formLabel($element) ?></th>
+                	<td><?= $this->formElement($element) ?></td>
+                </tr>
+        	<?php endforeach; ?>
+        	</tbody>
+        </table>
+        <hr>
+        <button type="button" id="btn-modal_customer-with-formviewhelpers" class="btn btn-primary btn-sm">Modal with Form View Helpers</button>
+        <button type="button" id="btn-modal_customer-without-formviewhelpers" class="btn btn-primary btn-sm">Modal without Form View Helpers</button>
+    </div>
+</div>
+<?= $this->form()->closeTag(); ?>
+
+<div class="modal fade" id="modal-dialog" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content panel">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="console">
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#btn-modal_customer-with-formviewhelpers').click(function() {
+		displayModal(1);
+	});
+	
+	$('#btn-modal_customer-without-formviewhelpers').click(function() {
+		displayModal(0);
+	});
+
+	function displayModal(withFormViewHelpers) {
+		var id = $('#field-id').val();
+		$.ajax({
+			type: 'POST',
+			url: '<?= $this->url('ajax', ['action' => 'edit-customer']) ?>',
+			dataType: 'json',
+			async: false,
+			data: {
+				id: id,
+				formhelpers: withFormViewHelpers
+			},
+			success: function(ret) {
+				$('#console').empty();
+				var modalDialog = $('#modal-dialog');
+	    		modalDialog.find('h4.modal-title').empty().append(ret.title);
+	    		modalDialog.find('div.modal-body').empty().append(ret.body);
+	    		modalDialog.modal();
+			},
+		    error: function (xhr, status, errorThrown) {
+			    $('#console').html('<hr><h4>Ajax call returned following error:</h4><hr>' + xhr.responseText);
+		    }
+			
+		});
+	}
+});
+</script>

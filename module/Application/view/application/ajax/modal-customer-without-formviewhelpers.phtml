@@ -1,0 +1,24 @@
+<?php 
+    $fields = [ 'firstname', 
+        'lastname', 
+        'email',
+    ];
+?>
+<div class="row">
+    <div class="col-xs-8">
+        <table class="table table-condensed">
+            <colgroup>
+                <col class="col-xs-6">
+                <col class="col-xs-6">
+            </colgroup>
+            <tbody>
+            <?php foreach ($fields as $field): $element = $this->form->get($field); ?>
+                <tr>
+                	<th><?= $element->getLabel() ?></th>
+                	<td><input type="text" id="field-<?= $field ?>" name="<?= $field ?>" value="<?= $element->getValue() ?>"></td>
+                </tr>
+        	<?php endforeach; ?>
+        	</tbody>
+        </table>
+    </div>
+</div>
